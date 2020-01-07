@@ -1,5 +1,9 @@
 <?php
 
+/**
+Overloading by specific needs
+**/
+
 namespace DataDog\AuditBundle\EventSubscriber;
 
 use DataDog\AuditBundle\DBAL\AuditLogger;
