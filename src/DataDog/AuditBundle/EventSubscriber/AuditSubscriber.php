@@ -336,8 +336,7 @@ class AuditSubscriber implements EventSubscriber
     }
 
     protected function audit(EntityManager $em, array $data)
-    {        
-        
+    {  
 
         $c = $em->getConnection();
         $p = $c->getDatabasePlatform();
@@ -355,7 +354,7 @@ class AuditSubscriber implements EventSubscriber
                 }
                 $typ = $meta->fieldMappings[$name]['type'];
 
-                $this->assocInsertStmt->bindValue($idx++, $data[$field][$name], $typ);
+                $this->assocInsertStmt->bindValue($idx++, isset($data[$field][$name]) ? $data[$field][$name] : null, $typ);
             }
             $this->assocInsertStmt->execute();
             // use id generator, it will always use identity strategy, since our
@@ -388,7 +387,7 @@ class AuditSubscriber implements EventSubscriber
             if (in_array($name, ['source', 'target', 'blame']) && $data[$name] === false) {
                 $data[$name] = null;
             }
-            $this->auditInsertStmt->bindValue($idx++, $data[$name], $typ);
+            $this->auditInsertStmt->bindValue($idx++, isset($data[$field][$name]) ? $data[$field][$name] : null, $typ);
         }
         $this->auditInsertStmt->execute();
     }
