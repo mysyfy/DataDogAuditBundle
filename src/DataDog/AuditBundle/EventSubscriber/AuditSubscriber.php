@@ -22,6 +22,9 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+use App\Service\UserProfileService;
 
 class AuditSubscriber implements EventSubscriber
 {
@@ -36,6 +39,15 @@ class AuditSubscriber implements EventSubscriber
      * @var TokenStorageInterface
      */
     protected $securityTokenStorage;
+
+    /**
+     * @var SessionInterface
+     */
+    protected $sessionStorage;
+
+    protected $myUserProfileService;
+
+
 
     protected $auditedEntities = [];
     protected $unauditedEntities = [];
@@ -54,9 +66,10 @@ class AuditSubscriber implements EventSubscriber
     /** @var UserInterface */
     protected $blameUser;
 
-    public function __construct(TokenStorageInterface $securityTokenStorage)
+    public function __construct(TokenStorageInterface $securityTokenStorage, UserProfileService $ups)
     {
-        $this->securityTokenStorage = $securityTokenStorage;
+        $this->securityTokenStorage         = $securityTokenStorage;
+        $this->myUserProfileService         = $ups;
     }
 
     public function setLabeler(callable $labeler = null)
@@ -316,8 +329,16 @@ class AuditSubscriber implements EventSubscriber
         ]);
     }
 
+    protected function getRoleContext() {
+
+        return $this->myUserProfileService->getCondominio();
+
+    }
+
     protected function audit(EntityManager $em, array $data)
-    {
+    {        
+        
+
         $c = $em->getConnection();
         $p = $c->getDatabasePlatform();
         $q = $em->getConfiguration()->getQuoteStrategy();
@@ -343,8 +364,17 @@ class AuditSubscriber implements EventSubscriber
         }
 
         $meta = $em->getClassMetadata(AuditLog::class);
-        $data['loggedAt'] = new \DateTime();
+
+        $data['loggedAt']           = new \DateTime();
+
+        if(($cond = $this->myUserProfileService->getCondominio())) {
+
+            $data['session_context']    = $cond->getId();
+
+        }
+
         $idx = 1;
+
         foreach ($meta->reflFields as $name => $f) {
             if ($meta->isIdentifier($name)) {
                 continue;

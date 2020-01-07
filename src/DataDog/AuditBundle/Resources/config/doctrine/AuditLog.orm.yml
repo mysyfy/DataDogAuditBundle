@@ -27,3 +27,6 @@ DataDog\AuditBundle\Entity\AuditLog:
       nullable: true
     loggedAt:
       type: datetime
+    session_context:
+      length: 128
+      nullable: true

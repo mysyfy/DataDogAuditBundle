@@ -28,6 +28,11 @@ class AuditLog
     private $tbl;
 
     /**
+     * @ORM\Column(length=128, nullable=true)
+     */
+    private $session_context;
+
+    /**
      * @ORM\OneToOne(targetEntity="Association")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -91,5 +96,9 @@ class AuditLog
     public function getLoggedAt()
     {
         return $this->loggedAt;
+    }
+
+    public function getSessionContext() {
+        return $this->session_context;
     }
 }
