@@ -19,3 +19,9 @@ DataDog\AuditBundle\Entity\Association:
       type: string
     class:
       type: string
+    session_role:
+      length: 128
+      nullable: true
+    session_context:
+      length: 128
+      nullable: true

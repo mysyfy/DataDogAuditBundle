@@ -42,6 +42,17 @@ class Association
      */
     private $class;
 
+
+    /**
+     * @ORM\Column(length=128, nullable=true)
+     */
+    private $session_role;
+
+    /**
+     * @ORM\Column(length=128, nullable=true)
+     */
+    private $session_context;
+
     public function getId()
     {
         return $this->id;
@@ -76,5 +87,15 @@ class Association
     public function getClass()
     {
         return $this->class;
+    }
+
+    public function getSessionRole()
+    {
+        return $this->session_role;
+    }
+
+    public function getClass()
+    {
+        return $this->session_context;
     }
 }
