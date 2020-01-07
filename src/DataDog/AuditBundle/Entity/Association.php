@@ -94,7 +94,7 @@ class Association
         return $this->session_role;
     }
 
-    public function getClass()
+    public function getSessionContext()
     {
         return $this->session_context;
     }
