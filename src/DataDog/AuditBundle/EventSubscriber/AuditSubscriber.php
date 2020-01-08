@@ -387,7 +387,7 @@ class AuditSubscriber implements EventSubscriber
             if (in_array($name, ['source', 'target', 'blame']) && $data[$name] === false) {
                 $data[$name] = null;
             }
-            $this->auditInsertStmt->bindValue($idx++, isset($data[$field][$name]) ? $data[$field][$name] : null, $typ);
+            $this->auditInsertStmt->bindValue($idx++, $data[$field][$name], $typ);
         }
         $this->auditInsertStmt->execute();
     }
